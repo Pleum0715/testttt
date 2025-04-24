@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้าออมเงิน - BudgetBuddy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>BudgetBuddy</h1>
+            <p class="tagline">เพื่อนคู่คิดเรื่องเงินของคุณ</p>
+            <nav>
+                <ul>
+                    <li><a href="index.html">หน้าหลัก</a></li>
+                    <li><a href="saving.html" class="active">ออมเงิน</a></li>
+                    <li><a href="planning.html">วางแผนการเงิน</a></li>
+                    <li><a href="knowledge.html">ความรู้ด้านการเงิน</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <div class="section">
+                <h2>หน้าออมเงิน</h2>
+                <p>ที่นี่คุณสามารถตั้งเป้าหมายการออมเงินและติดตามความคืบหน้าของคุณได้</p>
+                <a href="index.html" class="back-button">← กลับไปหน้าหลัก</a>
+            </div>
+
+            <div class="form-section">
+                <h2>เพิ่มเป้าหมายการออม</h2>
+                <div class="input-group">
+                    <label for="goalName">ชื่อเป้าหมาย:</label>
+                    <input type="text" id="goalName" placeholder="เช่น ซื้อโทรศัพท์ใหม่, ไปเที่ยวญี่ปุ่น">
+                </div>
+                <div class="input-group">
+                    <label for="goalAmount">จำนวนเงินที่ต้องการ (บาท):</label>
+                    <input type="number" id="goalAmount" placeholder="10000">
+                </div>
+                <div class="input-group">
+                    <label for="goalDeadline">วันที่ต้องการให้สำเร็จ (ไม่บังคับ):</label>
+                    <input type="date" id="goalDeadline">
+                </div>
+                <button id="addGoalBtn">เพิ่มเป้าหมาย</button>
+            </div>
+
+            <div class="form-section">
+                <h2>รายการเป้าหมายการออม</h2>
+                <div id="goalList" class="list-container">
+                    <!-- รายการเป้าหมายจะถูกเพิ่มที่นี่ด้วย JavaScript -->
+                    <div class="list-item goal-empty">
+                        <p>คุณยังไม่มีเป้าหมายการออม กรุณาเพิ่มเป้าหมายด้านบน</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>เพิ่มเงินออม</h2>
+                <div class="input-group">
+                    <label for="savingAmount">จำนวนเงินที่เพิ่ม (บาท):</label>
+                    <input type="number" id="savingAmount" placeholder="500">
+                </div>
+                <div class="input-group">
+                    <label for="goalToUpdate">สำหรับเป้าหมาย:</label>
+                    <select id="goalToUpdate">
+                        <option value="">-- เลือกเป้าหมาย --</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="savingDate">วันที่:</label>
+                    <input type="date" id="savingDate" value="">
+                </div>
+                <button id="addSavingBtn">เพิ่มเงิน</button>
+            </div>
+
+            <div class="form-section">
+                <h2>ประวัติการออม</h2>
+                <div id="savingHistory" class="list-container">
+                    <!-- ประวัติการออมจะถูกเพิ่มที่นี่ด้วย JavaScript -->
+                    <div class="list-item history-empty">
+                        <p>ยังไม่มีประวัติการออม</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h2>สรุปการออมเงิน</h2>
+                <div class="summary-item">
+                    <span>จำนวนเป้าหมายทั้งหมด:</span>
+                    <span id="totalGoals">0</span>
+                </div>
+                <div class="summary-item">
+                    <span>จำนวนเงินออมทั้งหมด:</span>
+                    <span id="totalSaved">0 บาท</span>
+                </div>
+                <div class="summary-item">
+                    <span>จำนวนเงินที่ต้องออม:</span>
+                    <span id="totalRequired">0 บาท</span>
+                </div>
+                <div class="summary-item">
+                    <span>สำเร็จแล้ว:</span>
+                    <span id="totalCompleted">0 เป้าหมาย</span>
+                </div>
+            </div>
+        </main>
+
+        <div class="back-to-top" id="backToTop">↑</div>
+
+        <footer>
+            <div class="footer-content">
+                <p>&copy; 2025 BudgetBuddy - แอพพลิเคชั่นสอนการเงินสำหรับทุกคน</p>
+                <nav class="footer-nav">
+                    <a href="about.html">เกี่ยวกับเรา</a>
+                    <a href="contact.html">ติดต่อเรา</a>
+                </nav>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // โค้ดสำหรับหน้าออมเงินโดยเฉพาะ
+        document.addEventListener('DOMContentLoaded', function() {
+            // ตั้งค่าวันที่ปัจจุบันในฟิลด์วันที่
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('savingDate').value = today;
+            
+            // โหลดข้อมูลเป้าหมายจาก localStorage (ถ้ามี)
+            loadGoalsFromStorage();
+            
+            // เพิ่ม event listeners
+            document.getElementById('addGoalBtn').addEventListener('click', addGoal);
+            document.getElementById('addSavingBtn').addEventListener('click', addSaving);
+            
+            // ปุ่มกลับขึ้นข้างบน
+            const backToTopButton = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // อัพเดทสรุป
+            updateSummary();
+        });
+
+        let goals = []; // เก็บข้อมูลเป้าหมาย
+        let savingHistory = []; // เก็บประวัติการออม
+
+        function loadGoalsFromStorage() {
+            const savedGoals = localStorage.getItem('budgetBuddyGoals');
+            const savedHistory = localStorage.getItem('budgetBuddySavingHistory');
+            
+            if (savedGoals) {
+                goals = JSON.parse(savedGoals);
+                renderGoalList();
+            }
+            
+            if (savedHistory) {
+                savingHistory = JSON.parse(savedHistory);
+                renderSavingHistory();
+            }
+            
+            updateGoalDropdown();
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('budgetBuddyGoals', JSON.stringify(goals));
+            localStorage.setItem('budgetBuddySavingHistory', JSON.stringify(savingHistory));
+        }
+
+        function addGoal() {
+            const goalNameInput = document.getElementById("goalName");
+            const goalAmountInput = document.getElementById("goalAmount");
+            const goalDeadlineInput = document.getElementById("goalDeadline");
+            
+            const goalName = goalNameInput.value.trim();
+            const goalAmount = parseFloat(goalAmountInput.value);
+            const goalDeadline = goalDeadlineInput.value;
+
+            if (goalName && !isNaN(goalAmount) && goalAmount > 0) {
+                // ตรวจสอบชื่อเป้าหมายซ้ำ
+                if (goals.some(goal => goal.name === goalName)) {
+                    alert("มีเป้าหมายชื่อนี้อยู่แล้ว กรุณาใช้ชื่ออื่น");
+                    return;
+                }
+
+                const newGoal = { 
+                    id: Date.now().toString(),
+                    name: goalName, 
+                    amount: goalAmount, 
+                    saved: 0,
+                    deadline: goalDeadline || null,
+                    createdAt: new Date().toISOString()
+                };
+                
+                goals.push(newGoal);
+                
+                // บันทึกลง localStorage
+                saveToStorage();
+                
+                // อัพเดทการแสดงผล
+                renderGoalList();
+                updateGoalDropdown();
+                updateSummary();
+                
+                // เคลียร์ฟอร์ม
+                goalNameInput.value = "";
+                goalAmountInput.value = "";
+                goalDeadlineInput.value = "";
+            } else {
+                alert("กรุณากรอกชื่อเป้าหมายและจำนวนเงินที่ต้องการออมให้ถูกต้อง");
+            }
+        }
+
+        function renderGoalList() {
+            const goalList = document.getElementById("goalList");
+            
+            // เคลียร์รายการเก่า
+            goalList.innerHTML = "";
+            
+            if (goals.length === 0) {
+                const emptyItem = document.createElement("div");
+                emptyItem.className = "list-item goal-empty";
+                emptyItem.innerHTML = "<p>คุณยังไม่มีเป้าหมายการออม กรุณาเพิ่มเป้าหมายด้านบน</p>";
+                goalList.appendChild(emptyItem);
+                return;
+            }
+            
+            // เรียงตามความคืบหน้า (น้อยไปมาก)
+            goals.sort((a, b) => (a.saved / a.amount) - (b.saved / b.amount));
+            
+            goals.forEach(goal => {
+                const listItem = document.createElement("div");
+                listItem.className = "list-item";
+                
+                const progress = (goal.saved / goal.amount) * 100;
+                const isComplete = goal.saved >= goal.amount;
+                
+                let deadlineText = "";
+                if (goal.deadline) {
+                    const deadlineDate = new Date(goal.deadline);
+                    deadlineText = `<p>กำหนด: ${deadlineDate.toLocaleDateString('th-TH')}</p>`;
+                }
+                
+                listItem.innerHTML = `
+                    <div class="list-item-details">
+                        <h3>${goal.name} ${isComplete ? '✅' : ''}</h3>
+                        <p>ออมแล้ว: ${goal.saved.toLocaleString()} บาท จากเป้าหมาย ${goal.amount.toLocaleString()} บาท</p>
+                        ${deadlineText}
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: ${Math.min(progress, 100)}%">
+                                ${Math.round(progress)}%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-item-actions">
+                        <button class="btn-secondary" onclick="deleteGoal('${goal.id}')">ลบ</button>
+                    </div>
+                `;
+                
+                goalList.appendChild(listItem);
+            });
+        }
+
+        function updateGoalDropdown() {
+            const goalToUpdateDropdown = document.getElementById("goalToUpdate");
+            goalToUpdateDropdown.innerHTML = ""; // Clear existing options
+            
+            // เพิ่มตัวเลือกว่าง
+            const emptyOption = document.createElement("option");
+            emptyOption.value = "";
+            emptyOption.textContent = "-- เลือกเป้าหมาย --";
+            goalToUpdateDropdown.appendChild(emptyOption);
+            
+            goals.forEach(goal => {
+                const option = document.createElement("option");
+                option.value = goal.id;
+                option.textContent = `${goal.name} (${goal.saved}/${goal.amount} บาท)`;
+                goalToUpdateDropdown.appendChild(option);
+            });
+        }
+
+        function addSaving() {
+            const savingAmountInput = document.getElementById("savingAmount");
+            const goalToUpdateDropdown = document.getElementById("goalToUpdate");
+            const savingDateInput = document.getElementById("savingDate");
+            
+            const savingAmount = parseFloat(savingAmountInput.value);
+            const selectedGoalId = goalToUpdateDropdown.value;
+            const savingDate = savingDateInput.value;
+
+            if (!isNaN(savingAmount) && savingAmount > 0 && selectedGoalId) {
+                const goalToUpdate = goals.find(goal => goal.id === selectedGoalId);
+                
+                if (goalToUpdate) {
+                    // เพิ่มเงินออม
+                    goalToUpdate.saved += savingAmount;
+                    
+                    // เพิ่มประวัติการออม
+                    const historyEntry = {
+                        id: Date.now().toString(),
+                        goalId: goalToUpdate.id,
+                        goalName: goalToUpdate.name,
+                        amount: savingAmount,
+                        date: savingDate || new Date().toISOString().split('T')[0],
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    savingHistory.push(historyEntry);
+                    
+                    // บันทึกลง localStorage
+                    saveToStorage();
+                    
+                    // อัพเดทการแสดงผล
+                    renderGoalList();
+                    renderSavingHistory();
+                    updateGoalDropdown();
+                    updateSummary();
+                    
+                    // เคลียร์ฟอร์ม
+                    savingAmountInput.value = "";
+                    
+                    if (goalToUpdate.saved >= goalToUpdate.amount && goalToUpdate.saved - savingAmount < goalToUpdate.amount) {
+                        // แสดงการแจ้งเตือนเมื่อเป้าหมายสำเร็จ
+                        alert(`🎉 ยินดีด้วย! คุณทำเป้าหมาย "${goalToUpdate.name}" สำเร็จแล้ว!`);
+                    }
+                }
+            } else {
+                alert("กรุณากรอกจำนวนเงินที่ต้องการเพิ่มและเลือกเป้าหมาย");
+            }
+        }
+
+        function renderSavingHistory() {
+            const historyContainer = document.getElementById("savingHistory");
+            
+            // เคลียร์รายการเก่า
+            historyContainer.innerHTML = "";
+            
+            if (savingHistory.length === 0) {
+                const emptyItem = document.createElement("div");
+                emptyItem.className = "list-item history-empty";
+                emptyItem.innerHTML = "<p>ยังไม่มีประวัติการออม</p>";
+                historyContainer.appendChild(emptyItem);
+                return;
+            }
+            
+            // เรียงตามวันที่ (ใหม่ไปเก่า)
+            savingHistory.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            savingHistory.forEach(entry => {
+                const listItem = document.createElement("div");
+                listItem.className = "list-item";
+                
+                const entryDate = new Date(entry.date);
+                
+                listItem.innerHTML = `
+                    <div class="list-item-details">
+                        <h3>เพิ่มเงิน ${entry.amount.toLocaleString()} บาท</h3>
+                        <p>สำหรับเป้าหมาย: ${entry.goalName}</p>
+                        <p>วันที่: ${entryDate.toLocaleDateString('th-TH')}</p>
+                    </div>
+                    <div class="list-item-actions">
+                        <button class="btn-secondary" onclick="deleteHistory('${entry.id}')">ลบ</button>
+                    </div>
+                `;
+                
+                historyContainer.appendChild(listItem);
+            });
+        }
+
+        function deleteGoal(goalId) {
+            if (confirm("คุณแน่ใจหรือไม่ที่จะลบเป้าหมายนี้? ประวัติการออมที่เกี่ยวข้องทั้งหมดจะถูกลบด้วย")) {
+                // ลบเป้าหมาย
+                goals = goals.filter(goal => goal.id !== goalId);
+                
+                // ลบประวัติการออมที่เกี่ยวข้อง
+                savingHistory = savingHistory.filter(entry => entry.goalId !== goalId);
+                
+                // บันทึกลง localStorage
+                saveToStorage();
+                
+                // อัพเดทการแสดงผล
+                renderGoalList();
+                renderSavingHistory();
+                updateGoalDropdown();
+                updateSummary();
+            }
+        }
+
+        function deleteHistory(historyId) {
+            if (confirm("คุณแน่ใจหรือไม่ที่จะลบรายการนี้?")) {
+                // หารายการที่จะลบ
+                const entryToDelete = savingHistory.find(entry => entry.id === historyId);
+                
+                if (entryToDelete) {
+                    // หาเป้าหมายที่เกี่ยวข้อง
+                    const relatedGoal = goals.find(goal => goal.id === entryToDelete.goalId);
+                    
+                    if (relatedGoal) {
+                        // ลดยอดเงินออม
+                        relatedGoal.saved -= entryToDelete.amount;
+                        
+                        // ป้องกันยอดติดลบ
+                        if (relatedGoal.saved < 0) {
+                            relatedGoal.saved = 0;
+                        }
+                    }
+                    
+                    // ลบรายการออมจากประวัติ
+                    savingHistory = savingHistory.filter(entry => entry.id !== historyId);
+                    
+                    // บันทึกลง localStorage
+                    saveToStorage();
+                    
+                    // อัพเดทการแสดงผล
+                    renderGoalList();
+                    renderSavingHistory();
+                    updateGoalDropdown();
+                    updateSummary();
+                }
+            }
+        }
+
+        function updateSummary() {
+            const totalGoalsSpan = document.getElementById("totalGoals");
+            const totalSavedSpan = document.getElementById("totalSaved");
+            const totalRequiredSpan = document.getElementById("totalRequired");
+            const totalCompletedSpan = document.getElementById("totalCompleted");
+            
+            const totalGoalsCount = goals.length;
+            const totalSavedAmount = goals.reduce((sum, goal) => sum + goal.saved, 0);
+            const totalRequiredAmount = goals.reduce((sum, goal) => sum + goal.amount, 0);
+            const totalCompletedCount = goals.filter(goal => goal.saved >= goal.amount).length;
+            
+            totalGoalsSpan.textContent = totalGoalsCount;
+            totalSavedSpan.textContent = `${totalSavedAmount.toLocaleString()} บาท`;
+            totalRequiredSpan.textContent = `${totalRequiredAmount.toLocaleString()} บาท`;
+            totalCompletedSpan.textContent = `${totalCompletedCount} เป้าหมาย`;
+        }
+    </script>
+</body>
+</html>

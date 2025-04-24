@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้าการวางแผนการเงิน - BudgetBuddy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>BudgetBuddy</h1>
+            <p class="tagline">เพื่อนคู่คิดเรื่องเงินของคุณ</p>
+            <nav>
+                <ul>
+                    <li><a href="index.html">หน้าหลัก</a></li>
+                    <li><a href="saving.html">ออมเงิน</a></li>
+                    <li><a href="planning.html" class="active">วางแผนการเงิน</a></li>
+                    <li><a href="knowledge.html">ความรู้ด้านการเงิน</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <div class="section">
+                <h2>หน้าการวางแผนการเงิน</h2>
+                <p>ที่นี่คุณสามารถบันทึกรายรับรายจ่าย และวิเคราะห์การซื้อสินค้าได้</p>
+                <a href="index.html" class="back-button">← กลับไปหน้าหลัก</a>
+            </div>
+
+            <div class="form-section">
+                <h2>บันทึกรายรับ</h2>
+                <div class="input-group">
+                    <label for="incomeAmount">จำนวนเงิน (บาท):</label>
+                    <input type="number" id="incomeAmount" placeholder="1000">
+                </div>
+                <div class="input-group">
+                    <label for="incomeSource">แหล่งที่มา:</label>
+                    <input type="text" id="incomeSource" placeholder="เงินเดือน, ค่าขนม, รายได้เสริม">
+                </div>
+                <div class="input-group">
+                    <label for="incomeDate">วันที่:</label>
+                    <input type="date" id="incomeDate">
+                </div>
+                <button id="addIncomeBtn">เพิ่มรายรับ</button>
+            </div>
+
+            <div class="form-section">
+                <h2>รายการรายรับ</h2>
+                <div id="incomeList" class="list-container">
+                    <!-- รายการรายรับจะถูกเพิ่มที่นี่ด้วย JavaScript -->
+                    <div class="list-item income-empty">
+                        <p>ยังไม่มีรายการรายรับ</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>บันทึกรายจ่าย</h2>
+                <div class="input-group">
+                    <label for="expenseItem">รายการ:</label>
+                    <input type="text" id="expenseItem" placeholder="อาหาร, ขนส่ง, ค่าเช่า">
+                </div>
+                <div class="input-group">
+                    <label for="expenseAmount">จำนวนเงิน (บาท):</label>
+                    <input type="number" id="expenseAmount" placeholder="500">
+                </div>
+                <div class="input-group">
+                    <label for="expenseCategory">หมวดหมู่:</label>
+                    <select id="expenseCategory">
+                        <option value="อาหาร">อาหาร</option>
+                        <option value="ขนส่ง">ขนส่ง</option>
+                        <option value="ที่พัก">ที่พัก</option>
+                        <option value="ความบันเทิง">ความบันเทิง</option>
+                        <option value="การศึกษา">การศึกษา</option>
+                        <option value="สุขภาพ">สุขภาพ</option>
+                        <option value="อื่นๆ">อื่นๆ</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="expenseDate">วันที่:</label>
+                    <input type="date" id="expenseDate">
+                </div>
+                <button id="addExpenseBtn">เพิ่มรายจ่าย</button>
+            </div>
+
+            <div class="form-section">
+                <h2>รายการรายจ่าย</h2>
+                <div id="expenseList" class="list-container">
+                    <!-- รายการรายจ่ายจะถูกเพิ่มที่นี่ด้วย JavaScript -->
+                    <div class="list-item expense-empty">
+                        <p>ยังไม่มีรายการรายจ่าย</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>วิเคราะห์การซื้อสินค้า</h2>
+                <div class="input-group">
+                    <label for="productName">ชื่อสินค้า:</label>
+                    <input type="text" id="productName" placeholder="โทรศัพท์, รองเท้า">
+                </div>
+                <div class="input-group">
+                    <label for="productPrice">ราคา (บาท):</label>
+                    <input type="number" id="productPrice" placeholder="5000">
+                </div>
+                <div class="input-group">
+                    <label for="purchaseFrequency">ซื้อบ่อยแค่ไหน (ครั้ง/เดือน):</label>
+                    <input type="number" id="purchaseFrequency" placeholder="1">
+                </div>
+                <div class="input-group">
+                    <label for="isNecessary">จำเป็นหรือไม่:</label>
+                    <select id="isNecessary">
+                        <option value="true">จำเป็น</option>
+                        <option value="false">ไม่จำเป็น</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="budget">งบประมาณที่มี (บาท):</label>
+                    <input type="number" id="budget" placeholder="10000">
+                </div>
+                <div class="input-group">
+                    <label for="timesCanBuy">ซื้อได้กี่ครั้ง (ถ้าซื้อ):</label>
+                    <input type="number" id="timesCanBuy" readonly>
+                </div>
+                <div class="input-group">
+                    <label for="feeling">รู้สึกหนักใจ/กังวลในการซื้อหรือไม่:</label>
+                    <select id="feeling">
+                        <option value="no">ไม่</option>
+                        <option value="yes">ใช่</option>
+                    </select>
+                </div>
+                <button id="analyzeBtn">วิเคราะห์</button>
+                <div id="analysisResult" class="analysis-result" style="display: none;"></div>
+            </div>
+
+            <div class="summary-section">
+                <h2>สรุปรายรับรายจ่าย</h2>
+                <div class="summary-item">
+                    <span>รายรับรวม:</span>
+                    <span id="totalIncome">0 บาท</span>
+                </div>
+                <div class="summary-item">
+                    <span>รายจ่ายรวม:</span>
+                    <span id="totalExpenses">0 บาท</span>
+                </div>
+                <div class="summary-item">
+                    <span>คงเหลือ:</span>
+                    <span id="remainingBalance">0 บาท</span>
+                </div>
+            </div>
+
+            <div class="form-
